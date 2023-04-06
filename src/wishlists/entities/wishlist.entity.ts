@@ -1,5 +1,6 @@
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
+import { IsDate, IsString, Length, IsUrl } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +8,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
   ManyToMany,
 } from 'typeorm';
 
@@ -17,10 +17,18 @@ export class Wishlist {
   id: number;
 
   @Column()
-  amount: number;
+  @IsString()
+  @Length(1, 250)
+  name: string;
 
   @Column()
-  item: string;
+  @IsString()
+  @Length(0, 1500)
+  description: string;
+
+  @Column()
+  @IsUrl()
+  image: string;
 
   @ManyToMany(() => Wish, (wish) => wish.wishlists)
   items: Wish[];
@@ -29,8 +37,10 @@ export class Wishlist {
   owner: User;
 
   @CreateDateColumn()
+  @IsDate()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @IsDate()
   updatedAt: Date;
 }

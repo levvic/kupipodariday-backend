@@ -1,6 +1,11 @@
 import { Offer } from 'src/offers/entities/offer.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
+import { IsString, Length, IsEmail, IsUrl, IsDate } from 'class-validator';
+import {
+  ABOUT_DEFAULT_TEXT,
+  AVATAR_DEFAULT_LINK,
+} from 'src/utils/constants/user';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -15,19 +20,30 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    unique: true,
+    length: 30,
+  })
+  @IsString()
+  @Length(2, 30)
   username: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 200, default: ABOUT_DEFAULT_TEXT })
+  @IsString()
+  @Length(2, 200)
   about: string;
 
-  @Column()
-  avatar: string = 'https://i.pravatar.cc/300';
+  @Column({ default: AVATAR_DEFAULT_LINK })
+  @IsUrl()
+  avatar: string;
 
-  @Column()
+  @Column({ unique: true })
+  @IsEmail()
   email: string;
 
   @Column()
+  @IsString()
   password: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)
@@ -40,8 +56,10 @@ export class User {
   wishlists: Wishlist[];
 
   @CreateDateColumn()
-   createdAt: Date;
+  @IsDate()
+  createdAt: Date;
 
-   @UpdateDateColumn()
-   updatedAt: Date;
+  @UpdateDateColumn()
+  @IsDate()
+  updatedAt: Date;
 }

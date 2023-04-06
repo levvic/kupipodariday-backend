@@ -2,6 +2,14 @@ import { Offer } from 'src/offers/entities/offer.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Wishlist } from 'src/wishlists/entities/wishlist.entity';
 import {
+  IsDate,
+  IsString,
+  Length,
+  IsUrl,
+  IsNumber,
+  IsInt,
+} from 'class-validator';
+import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
@@ -18,24 +26,41 @@ export class Wish {
   id: number;
 
   @Column()
+  @IsString()
+  @Length(2, 250)
   name: string;
 
   @Column()
+  @IsUrl()
   link: string;
 
   @Column()
+  @IsUrl()
   image: string;
 
-  @Column()
+  @Column({
+    type: 'numeric',
+    precision: 10,
+    scale: 2,
+  })
+  @IsNumber()
   price: number;
 
-  @Column()
+  @Column({
+    type: 'numeric',
+    precision: 10,
+    scale: 2,
+    default: 0,
+  })
+  @IsNumber()
   raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
   owner: User;
 
   @Column()
+  @IsString()
+  @Length(1, 1024)
   description: string;
 
   @OneToMany(() => Offer, (offer) => offer.item)
@@ -44,12 +69,15 @@ export class Wish {
   @ManyToMany(() => Wishlist, (offer) => offer.items)
   wishlists: Wishlist[];
 
-  @Column()
+  @Column({ default: 0 })
+  @IsInt()
   copied: number;
 
   @CreateDateColumn()
+  @IsDate()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @IsDate()
   updatedAt: Date;
 }
