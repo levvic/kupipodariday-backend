@@ -10,13 +10,6 @@ import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class OffersService {
   constructor(
-    private dataSource: DataSource,
-    @InjectRepository(Offer)
-    private offerRepository: Repository<Offer>,
-    @InjectRepository(Wish)
-    private wishRepository: Repository<Wish>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
   ) {}
 
   create(createOfferDto: CreateOfferDto) {

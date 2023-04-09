@@ -1,3 +1,3 @@
-import { CreateWishDto } from "./create-wish.dto";
+import { CreateWishDto } from './create-wish.dto';
 
 export class UpdateWishDto extends CreateWishDto {}
