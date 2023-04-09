@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { HashService } from 'src/hash/hash.service';
 
@@ -54,6 +54,18 @@ export class UsersService {
     await this.usersRepository.update(user.id, updatedUser);
 
     return await this.findById(id);
+  }
+
+  async findMany(query: string): Promise<User[]> {
+    const users = await this.usersRepository.find({
+      where: [{ email: query }, { username: query }],
+    });
+
+    users.forEach((user) => {
+      delete user.password;
+    });
+
+    return users;
   }
 
   updateOne(id: number, updateUserDto: UpdateUserDto) {

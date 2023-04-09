@@ -8,6 +8,7 @@ import {
   Patch,
   Req,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
@@ -34,5 +35,10 @@ export class UsersController {
     @Body() dto: UpdateUserDto,
   ): Promise<User> {
     return await this.usersService.updateById(user.id, dto);
+  }
+
+  @Post('find')
+  async findUsers(@Body('query') query: string): Promise<User[]> {
+    return await this.usersService.findMany(query);
   }
 }
