@@ -4,12 +4,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { HashService } from 'src/hash/hash.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private readonly hashService: HashService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -28,6 +30,30 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User> {
     return await this.usersRepository.findOneBy({ email });
+  }
+
+  async findById(id: number): Promise<User> {
+    return await this.usersRepository.findOneBy({ id });
+  }
+
+  async updateById(id: number, dto: UpdateUserDto): Promise<User> {
+    const user = await this.findById(id);
+    //hash password
+    if (dto.password) {
+      dto.password = await this.hashService.getHashAsync(dto.password);
+    }
+
+    const updatedUser: User = {
+      ...user,
+      password: dto?.password,
+      email: dto?.email,
+      about: dto?.about,
+      username: dto?.username,
+      avatar: dto?.avatar,
+    };
+    await this.usersRepository.update(user.id, updatedUser);
+
+    return await this.findById(id);
   }
 
   updateOne(id: number, updateUserDto: UpdateUserDto) {
