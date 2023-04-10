@@ -9,8 +9,7 @@ import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class OffersService {
-  constructor(
-  ) {}
+  constructor() {}
 
   create(createOfferDto: CreateOfferDto) {
     return 'This action adds a new offer';

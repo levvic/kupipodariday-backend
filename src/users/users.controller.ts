@@ -9,9 +9,11 @@ import {
   Req,
   UseGuards,
   Post,
+  Param,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { USER_IS_NOT_FOUND } from 'src/utils/constants/user';
 
 @Controller('users')
 export class UsersController {
@@ -25,7 +27,7 @@ export class UsersController {
       throw new NotFoundException();
     }
     const { password, ...result } = userData;
-    return userData;
+    return result;
   }
 
   @UseGuards(JwtGuard)
@@ -40,5 +42,16 @@ export class UsersController {
   @Post('find')
   async findUsers(@Body('query') query: string): Promise<User[]> {
     return await this.usersService.findMany(query);
+  }
+
+  @Get(':username')
+  async getUserByUsername(@Param('username') username: string): Promise<User> {
+    const user = await this.usersService.findByUsername(username);
+
+    if (!user) {
+      throw new NotFoundException(USER_IS_NOT_FOUND);
+    }
+
+    return user;
   }
 }

@@ -44,7 +44,7 @@ export class User {
 
   @Column()
   @IsString()
-  password: string;
+  password?: string;
 
   @OneToMany(() => Wish, (wish) => wish.owner)
   wishes: Wish[];
