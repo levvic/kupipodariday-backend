@@ -15,6 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { USER_IS_NOT_FOUND } from 'src/utils/constants/user';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { Wish } from 'src/wishes/entities/wish.entity';
 
 @UseGuards(JwtGuard)
 @UseGuards(ThrottlerGuard)
@@ -56,4 +57,20 @@ export class UsersController {
 
     return user;
   }
+
+  @Get('me/wishes')
+  async getAuthUserWishes(@Req() { user }: { user: User }): Promise<Wish[]> {
+    return await this.usersService.getWishes(Number(user.id));
+  }
+
+  @Get(':username/wishes')
+  async getUserWishes(@Param('username') username: string): Promise<Wish[]> {
+    const user = await this.usersService.findByUsername(username);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return await this.usersService.getWishes(Number(user.id));
+  }  
 }

@@ -5,12 +5,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { HashService } from 'src/hash/hash.service';
+import { Wish } from 'src/wishes/entities/wish.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Wish)
+    private readonly wishRepository: Repository<Wish>,
     private readonly hashService: HashService,
   ) {}
 
@@ -63,5 +66,20 @@ export class UsersService {
     });
 
     return users;
+  }
+
+  async getWishes(id: number): Promise<Wish[]> {
+    return this.wishRepository.find({
+      where: { owner: { id } },
+      relationLoadStrategy: 'join',
+      relations: [
+        'owner',
+        'offers',
+        'offers.user',
+        'offers.user.wishes',
+        'offers.user.offers',
+        'offers.user.wishlists',
+      ],
+    });
   }
 }
