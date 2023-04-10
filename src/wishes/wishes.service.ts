@@ -141,4 +141,8 @@ export class WishesService {
       where: { id: In(ids) },
     });
   }
+
+  async updateRaisedAmount(wishId: number, raised: number) {
+    await this.wishRepository.update(wishId, { raised });
+  }
 }
