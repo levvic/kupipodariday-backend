@@ -12,6 +12,7 @@ import { WishlistsModule } from './wishlists/wishlists.module';
 import { OffersModule } from './offers/offers.module';
 import { AuthModule } from './auth/auth.module';
 import { HashModule } from './hash/hash.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -25,6 +26,10 @@ import { HashModule } from './hash/hash.module';
       schema: 'nest_project',
       entities: [User, Offer, Wish, Wishlist],
       synchronize: true,
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 20,
     }),
     UsersModule,
     WishesModule,

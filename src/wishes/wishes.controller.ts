@@ -15,7 +15,9 @@ import { CreateWishDto } from './dto/create-wish.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from './entities/wish.entity';
 import { UpdateWishDto } from './dto/update-wish.dto';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
+@UseGuards(ThrottlerGuard)
 @Controller('wishes')
 export class WishesController {
   constructor(private readonly wishesService: WishesService) {}

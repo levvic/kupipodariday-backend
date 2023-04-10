@@ -15,8 +15,10 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { User } from 'src/users/entities/user.entity';
 import { Wishlist } from './entities/wishlist.entity';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @UseGuards(JwtGuard)
+@UseGuards(ThrottlerGuard)
 @Controller('wishlistlists')
 export class WishlistsController {
   constructor(private readonly wishlistsService: WishlistsService) {}

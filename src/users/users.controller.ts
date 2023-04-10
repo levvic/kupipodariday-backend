@@ -14,8 +14,10 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { USER_IS_NOT_FOUND } from 'src/utils/constants/user';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @UseGuards(JwtGuard)
+@UseGuards(ThrottlerGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
