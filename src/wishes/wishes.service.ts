@@ -8,7 +8,7 @@ import { UpdateWishDto } from './dto/update-wish.dto';
 import { User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wish } from './entities/wish.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class WishesService {
@@ -134,5 +134,11 @@ export class WishesService {
     };
 
     await this.create(wishCopy, user);
+  }
+
+  async findManyById(ids: number[]): Promise<Wish[]> {
+    return this.wishRepository.find({
+      where: { id: In(ids) },
+    });
   }
 }

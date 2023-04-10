@@ -10,26 +10,26 @@ import { HashService } from 'src/hash/hash.service';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
     private readonly hashService: HashService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const user = await this.usersRepository.create(createUserDto);
+    const user = await this.userRepository.create(createUserDto);
 
-    return this.usersRepository.save(user);
+    return this.userRepository.save(user);
   }
 
   async findByUsername(username: string): Promise<User> {
-    return await this.usersRepository.findOneBy({ username });
+    return await this.userRepository.findOneBy({ username });
   }
 
   async findByEmail(email: string): Promise<User> {
-    return await this.usersRepository.findOneBy({ email });
+    return await this.userRepository.findOneBy({ email });
   }
 
   async findById(id: number): Promise<User> {
-    return await this.usersRepository.findOneBy({ id });
+    return await this.userRepository.findOneBy({ id });
   }
 
   async updateById(id: number, dto: UpdateUserDto): Promise<User> {
@@ -47,13 +47,13 @@ export class UsersService {
       username: dto?.username,
       avatar: dto?.avatar,
     };
-    await this.usersRepository.update(user.id, updatedUser);
+    await this.userRepository.update(user.id, updatedUser);
 
     return await this.findById(id);
   }
 
   async findMany(query: string): Promise<User[]> {
-    const users = await this.usersRepository.find({
+    const users = await this.userRepository.find({
       where: [{ email: query }, { username: query }],
     });
 
