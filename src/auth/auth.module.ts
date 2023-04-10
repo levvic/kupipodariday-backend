@@ -14,14 +14,14 @@ import { HashModule } from 'src/hash/hash.module';
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
     HashModule,
     TypeOrmModule.forFeature([User]),
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt_secret'),
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: `${configService.get('JWT_EXPIRES')}` },
       }),
       inject: [ConfigService],
     }),

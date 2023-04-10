@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import { ValidationException } from './exceptions/validation-exception';
 
 async function bootstrap() {
-  const PORT = process.env.SERVER_PORT || 3000;
+  
   const app = await NestFactory.create(AppModule, { cors: true });
 
   app.useGlobalPipes(
@@ -15,10 +15,12 @@ async function bootstrap() {
     }),
   );
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
 
-  await app.listen(PORT, () => {
-    console.log(`Server is listening on port: ${PORT}`);
-  });
+  await app.listen(3000);
 }
 bootstrap();

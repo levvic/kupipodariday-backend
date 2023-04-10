@@ -15,9 +15,10 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const user = await this.userRepository.create(createUserDto);
-
-    return this.userRepository.save(user);
+    return this.userRepository.save({
+      ...createUserDto,
+      password: await this.hashService.getHashAsync(createUserDto.password),
+    });
   }
 
   async findByUsername(username: string): Promise<User> {

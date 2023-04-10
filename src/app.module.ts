@@ -13,19 +13,21 @@ import { OffersModule } from './offers/offers.module';
 import { AuthModule } from './auth/auth.module';
 import { HashModule } from './hash/hash.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ConfigModule } from '@nestjs/config';
+import config from './configuration/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ load: [config], isGlobal: true, }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'student',
-      password: 'student',
-      database: 'nest_project',
-      schema: 'nest_project',
-      entities: [User, Offer, Wish, Wishlist],
-      synchronize: true,
+      host: config().database.host,
+      port: config().database.port,
+      username: config().database.username,
+      password: config().database.password,
+      database: config().database.database,
+      entities: [User, Wish, Offer, Wishlist],
+      synchronize: config().database.synchronize,
     }),
     ThrottlerModule.forRoot({
       ttl: 60,

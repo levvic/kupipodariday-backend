@@ -32,14 +32,14 @@ export class AuthController {
   async signup(@Body() createUserDto: CreateUserDto) {
     const { email } = createUserDto;
 
-    const doesUserExist = await this.usersService.findByEmail(email);
+    const doesUserExist = await this.usersService.findByEmail(createUserDto.email) || await this.usersService.findByUsername(createUserDto.username);
 
     if (doesUserExist) {
       throw new BadRequestException(USER_ALREADY_EXISTS);
     }
-
-    /* При регистрации создаём пользователя и генерируем для него токен */
+    
     const user = await this.usersService.create(createUserDto);
-    return this.authService.getJwtToken(user);
+    const { password, ...result } = user;
+    return result;
   }
 }
