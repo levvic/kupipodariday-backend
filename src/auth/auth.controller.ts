@@ -32,12 +32,14 @@ export class AuthController {
   async signup(@Body() createUserDto: CreateUserDto) {
     const { email } = createUserDto;
 
-    const doesUserExist = await this.usersService.findByEmail(createUserDto.email) || await this.usersService.findByUsername(createUserDto.username);
+    const doesUserExist =
+      (await this.usersService.findByEmail(createUserDto.email)) ||
+      (await this.usersService.findByUsername(createUserDto.username));
 
     if (doesUserExist) {
       throw new BadRequestException(USER_ALREADY_EXISTS);
     }
-    
+
     const user = await this.usersService.create(createUserDto);
     const { password, ...result } = user;
     return result;

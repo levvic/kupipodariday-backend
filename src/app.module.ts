@@ -18,7 +18,7 @@ import config from './configuration/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ load: [config], isGlobal: true, }),
+    ConfigModule.forRoot({ load: [config], isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: config().database.host,
