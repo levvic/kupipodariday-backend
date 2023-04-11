@@ -75,7 +75,7 @@ export class WishlistsService {
       name: dto.name,
       image: dto.image,
       description: dto.description,
-      items: wishes.concat(wishlist.items),
+      items: wishes,
     });
   }
 

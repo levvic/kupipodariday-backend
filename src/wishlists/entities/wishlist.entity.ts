@@ -1,6 +1,6 @@
 import { User } from 'src/users/entities/user.entity';
 import { Wish } from 'src/wishes/entities/wish.entity';
-import { IsDate, IsString, Length, IsUrl } from 'class-validator';
+import { IsDate, IsString, Length, IsUrl, IsOptional } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -21,7 +22,8 @@ export class Wishlist {
   @Length(1, 250)
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsOptional()
   @IsString()
   @Length(0, 1500)
   description: string;
@@ -31,9 +33,10 @@ export class Wishlist {
   image: string;
 
   @ManyToMany(() => Wish, (wish) => wish.wishlists)
+  @JoinTable()
   items: Wish[];
 
-  @ManyToOne(() => User, (user) => user.wishlists)
+  @ManyToOne(() => User, (user) => user.wishlists)  
   owner: User;
 
   @CreateDateColumn()

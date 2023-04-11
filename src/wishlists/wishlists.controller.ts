@@ -8,6 +8,7 @@ import {
   Param,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { WishlistsService } from './wishlists.service';
 import { CreateWishlistDto } from './dto/create-wishlist.dto';
@@ -16,9 +17,11 @@ import { User } from 'src/users/entities/user.entity';
 import { Wishlist } from './entities/wishlist.entity';
 import { UpdateWishlistDto } from './dto/update-wishlist.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { WishInterceptor } from 'src/utils/interceptors/wish-interceptor';
 
 @UseGuards(JwtGuard)
 @UseGuards(ThrottlerGuard)
+@UseInterceptors(WishInterceptor)
 @Controller('wishlistlists')
 export class WishlistsController {
   constructor(private readonly wishlistsService: WishlistsService) {}
