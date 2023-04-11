@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { HashService } from 'src/hash/hash.service';
 import { Wish } from 'src/wishes/entities/wish.entity';
+import { USER_ALREADY_EXISTS } from 'src/utils/constants/user';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,14 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const doesUserExist =
+      (await this.findByEmail(createUserDto.email)) ||
+      (await this.findByUsername(createUserDto.username));
+
+    if (doesUserExist) {
+      throw new BadRequestException(USER_ALREADY_EXISTS);
+    }
+
     return this.userRepository.save({
       ...createUserDto,
       password: await this.hashService.getHashAsync(createUserDto.password),

@@ -30,8 +30,6 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
-    const { email } = createUserDto;
-
     const doesUserExist =
       (await this.usersService.findByEmail(createUserDto.email)) ||
       (await this.usersService.findByUsername(createUserDto.username));

@@ -9,6 +9,7 @@ import { User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wish } from './entities/wish.entity';
 import { In, Repository } from 'typeorm';
+import { WISH_COPY_FROM_SAME_OWNER } from 'src/utils/constants/wish';
 
 @Injectable()
 export class WishesService {
@@ -115,6 +116,11 @@ export class WishesService {
 
     if (!wish) {
       throw new NotFoundException();
+    }
+
+    // нельзя скопировать собственный подарок
+    if (wish.owner.id == user.id) {
+      throw new BadRequestException(WISH_COPY_FROM_SAME_OWNER);
     }
 
     await this.wishRepository.update(wishId, {

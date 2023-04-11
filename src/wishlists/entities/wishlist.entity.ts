@@ -36,7 +36,7 @@ export class Wishlist {
   @JoinTable()
   items: Wish[];
 
-  @ManyToOne(() => User, (user) => user.wishlists)  
+  @ManyToOne(() => User, (user) => user.wishlists)
   owner: User;
 
   @CreateDateColumn()
